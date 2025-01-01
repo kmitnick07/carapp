@@ -1,4 +1,5 @@
-import 'dart:convert';
+import 'package:apna_wash/Services/api_const.dart';
+import 'package:apna_wash/Services/api_provider.dart';
 import 'package:apna_wash/Routes/route_name.dart';
 import 'package:apna_wash/Utils/Custom/custom_dailog.dart';
 import 'package:dev_print/dev_print.dart';
@@ -6,26 +7,27 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../Model/work_order_model.dart';
-import 'package:http/http.dart' as http;
+import '../Model/WorkOrder/work_order_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeController extends GetxController {
-  var workOrders = <WorkOrder>[].obs;
-  var isLoading = false.obs;
-  var isLastPage = false.obs;
-  var currentPage = 1.obs;
-  final int pageSize = 10;
-  final String endPoint = 'https://apnawash.azurewebsites.net/api/GetAllWorkOrderForUser';
-  var hasShownGreeting = false.obs; // New flag to track greeting display
+  RxList<WorkOrder> workOrders = <WorkOrder>[].obs;
+  RxBool isLoading = false.obs;
+  RxBool isLastPage = false.obs;
+  int currentPage = 1;
+  int pageSize = 10;
+  String phoneNumber = '';
+  RxBool hasShownGreeting = false.obs; // New flag to track greeting display
+  User? currentUser = FirebaseAuth.instance.currentUser;
 
   ScrollController scrollController = ScrollController();
 
   @override
   void onInit() {
     super.onInit();
-
+    phoneNumber = kDebugMode ? '9898232801' : currentUser?.phoneNumber ?? '';
     fetchWorkOrders();
-    showGreeting();
+    checkAndShowGreeting();
     scrollController.addListener(_scrollListener);
   }
 
@@ -42,63 +44,36 @@ class HomeController extends GetxController {
   }
 
   void fetchWorkOrders({bool isLoadMore = false}) async {
-    final user = FirebaseAuth.instance.currentUser;
-    String phoneNumber = '';
+    if (isLoading.value || isLastPage.value) return; // Prevent duplicate requests if already loading
+    String apiEndpoint = 'GetAllWorkOrderForUser';
 
-    // Get the phone number of the user
-    if (user != null && user.phoneNumber != null) {
-      phoneNumber = kDebugMode ? '9898232801' : user.phoneNumber ?? '';
-      devPrint('Phone Number: $phoneNumber');
-    } else {
-      devPrint('No phone number available');
-    }
+    String url = '${ApiConst.baseUrl}$apiEndpoint?PageNumber=$currentPage&PageSize=$pageSize&PhoneNumber=$phoneNumber';
 
-    // Prevent duplicate requests if already loading
-    if (isLoading.value) return;
     isLoading.value = true;
-
     try {
-      // Calculate the current page number to fetch
-      final int page = isLoadMore ? currentPage.value + 1 : 1;
-      final String url = '$endPoint?PageNumber=$page&PageSize=$pageSize&PhoneNumber=$phoneNumber';
+      final response = await ApiProvider().httpMethod(method: HttpMethod.get, url: url);
 
-      final response = await http.get(Uri.parse(url));
-
-      // If the response is successful
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = json.decode(response.body);
-        final List<dynamic> data = responseData['result']['workOrders'] ?? [];
-
-        devPrint(responseData['result']['isLastPage'], tag: "013527");
-
-        // Check if it's the last page
-        isLastPage.value = responseData['result']['isLastPage'] == 'Yes' ? true : false;
-        devPrint(isLastPage.value ? 'Last Page' : 'Not Last Page');
-        if (isLastPage.value) {
-          devPrint('No more data available. This is the last page.');
-          return; // Exit the function if it's the last page
-        }
-
-        if (data.isNotEmpty) {
-          final List<WorkOrder> newWorkOrders = data.map((e) => WorkOrder.fromMap(e)).toList();
-
-          if (isLoadMore) {
-            workOrders.addAll(newWorkOrders);
-            currentPage.value = page;
-          } else {
-            workOrders.value = newWorkOrders;
-            currentPage.value = 1;
-          }
-        } else if (!isLoadMore) {
-          workOrders.clear();
-        }
-      } else {
-        print('Failed to fetch work orders: ${response.statusCode}');
+      if (response['success']) {
+        final workOrdersData = response['result']['workOrders'];
+        final workOrdersMap = (workOrdersData as List<dynamic>).map((e) => WorkOrder.fromMap(e)).toList();
+        workOrders.addAll(workOrdersMap);
+        currentPage++;
+        isLastPage.value = (response['result']['isLastPage'] ?? 'Yes') == 'Yes' ? true : false;
       }
     } catch (e) {
-      print('Error fetching work orders: $e');
+      devPrint(e, tag: "Error");
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  void checkAndShowGreeting() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool hasShownGreeting = prefs.getBool('hasShownGreeting') ?? false;
+
+    if (!hasShownGreeting) {
+      prefs.setBool('hasShownGreeting', true); // Mark the greeting as shown
+      showGreeting();
     }
   }
 

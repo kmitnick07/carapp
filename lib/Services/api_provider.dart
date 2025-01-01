@@ -5,8 +5,8 @@ import 'dart:io';
 import 'package:dev_print/dev_print.dart';
 import 'package:http/http.dart' as http;
 
-import '../config.dart';
-import '../encrypt_repo.dart';
+import '../Config/config.dart';
+import '../Config/encrypt_repo.dart';
 
 bool isSessionExpired = false;
 
@@ -47,9 +47,9 @@ class ApiProvider {
       if (method == HttpMethod.get) {
         response = await http.get(Uri.parse(url!.trim()), headers: reqHeader);
       } else if (method == HttpMethod.post) {
-        response = await http.post(Uri.parse(url!.trim()), headers: reqHeader, body: json.encode(reqBody));
+        response = await http.post(Uri.parse(url!.trim()), headers: reqHeader, body: jsonEncode(reqBody));
       } else if (method == HttpMethod.delete) {
-        response = await http.delete(Uri.parse(url!.trim()), headers: reqHeader, body: json.encode(reqBody));
+        response = await http.delete(Uri.parse(url!.trim()), headers: reqHeader, body: jsonEncode(reqBody));
       }
       // if (response?.headers['token'] != null) {
       //   Settings.authToken = response!.headers['token'].toString();
@@ -98,9 +98,9 @@ class ApiProvider {
     // if (response.headers['uid'] != null) {
     //   Settings.uid = response.headers['uid'].toString();
     // }
-    if (response.statusCode != 200) {
-      log("$url ------------------->", name: "${response.statusCode}");
-    }
+
+    log("-------------------> $url", name: "${response.statusCode}");
+
     switch (response.statusCode) {
       case 404:
         return {'status': 404, 'message': 'The requested URL was not found.'};
@@ -117,9 +117,9 @@ class ApiProvider {
         bodyString = EncryptRepo().decryptedData(body);
       }
       if (!Config.isEncrypted) {
-        responseJson = json.decode(bodyString);
+        responseJson = jsonDecode(bodyString);
       } else {
-        responseJson = json.decode(json.decode(bodyString));
+        responseJson = jsonDecode(jsonDecode(bodyString));
       }
     } catch (e) {
       return {};

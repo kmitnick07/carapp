@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 
 BuildFor buildFor = BuildFor.dev;
 
-class ApiConstant {
+class ApiConst {
   static String baseUrl = kDebugMode ? LocalUrl.sameer : deployUrl;
 
   static String deployUrl = buildFor.isDev

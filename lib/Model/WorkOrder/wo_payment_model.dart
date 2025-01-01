@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'parser.dart';
+import '../parser.dart';
 
 class WoPayments {
   WoPayments({

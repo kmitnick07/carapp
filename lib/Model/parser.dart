@@ -42,6 +42,12 @@ List<T> parseList<T>(dynamic e, T Function(dynamic e) builder) {
   return [];
 }
 
+List<T>? parseListNullable<T>(dynamic data, T Function(dynamic) fromMap) {
+  if (data == null) return null;
+  if (data is! List) throw ArgumentError('Expected a List, but got ${data.runtimeType}');
+  return data.map<T>((e) => fromMap(e)).toList();
+}
+
 List<T>? parseListN<T>(dynamic e, T Function(dynamic e) builder) => e == null ? null : parseList(e, builder);
 
 Set<T> parseSet<T>(dynamic e, T Function(dynamic e) builder) => parseList(e, builder).toSet();

@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:apna_wash/Model/wo_item_model.dart';
-import 'package:apna_wash/Model/wo_payment_model.dart';
+import 'package:apna_wash/Model/WorkOrder/wo_item_model.dart';
+import 'package:apna_wash/Model/WorkOrder/wo_payment_model.dart';
 
-import 'parser.dart';
+import '../parser.dart';
 
 class WorkOrder {
   WorkOrder({
@@ -60,10 +60,9 @@ class WorkOrder {
       totalDueAmount: parseDouble(m['totalDueAmount']),
       returnChangeAmount: parseDouble(m['returnChangeAmount']),
       woItemsJSON: parseString(m['woItemsJSON']),
-      woItems: parseList(m['woItems'], (e) => WoItems.fromMap(e ?? {})),
+      woItems: parseListNullable(m['woItems'], (e) => WoItems.fromMap(e ?? {})),
       woPaymentsJSON: parseString(m['woPaymentsJSON']),
-      woPayments:
-      parseList(m['woPayments'], (e) => WoPayments.fromMap(e ?? {})),
+      woPayments: parseListNullable(m['woPayments'], (e) => WoPayments.fromMap(e ?? {})),
     );
   }
 
@@ -90,38 +89,38 @@ class WorkOrder {
   double totalDueAmount;
   double returnChangeAmount;
   String woItemsJSON;
-  List<WoItems> woItems;
+  List<WoItems>? woItems;
   String woPaymentsJSON;
-  List<WoPayments> woPayments;
+  List<WoPayments>? woPayments;
 
   Map<String, dynamic> toMap() => {
-    'workOrderId': workOrderId,
-    'woCreatedDate': woCreatedDate,
-    'woInvoiceNo': woInvoiceNo,
-    'woCurrentStatus': woCurrentStatus,
-    'customerName': customerName,
-    'customerPhoneNumber': customerPhoneNumber,
-    'verifiedCustomer': verifiedCustomer,
-    'vehicleNumber': vehicleNumber,
-    'vehicleMake': vehicleMake,
-    'vehicleModel': vehicleModel,
-    'vehicleFuelType': vehicleFuelType,
-    'branchName': branchName,
-    'businessTradeName': businessTradeName,
-    'businessGSTINNumber': businessGSTINNumber,
-    'subTotal': subTotal,
-    'discount': discount,
-    'otherDiscount': otherDiscount,
-    'totalGSTAmount': totalGSTAmount,
-    'totalAmount': totalAmount,
-    'totalPaidAmount': totalPaidAmount,
-    'totalDueAmount': totalDueAmount,
-    'returnChangeAmount': returnChangeAmount,
-    'woItemsJSON': woItemsJSON,
-    'woItems': woItems,
-    'woPaymentsJSON': woPaymentsJSON,
-    'woPayments': woPayments,
-  };
+        'workOrderId': workOrderId,
+        'woCreatedDate': woCreatedDate,
+        'woInvoiceNo': woInvoiceNo,
+        'woCurrentStatus': woCurrentStatus,
+        'customerName': customerName,
+        'customerPhoneNumber': customerPhoneNumber,
+        'verifiedCustomer': verifiedCustomer,
+        'vehicleNumber': vehicleNumber,
+        'vehicleMake': vehicleMake,
+        'vehicleModel': vehicleModel,
+        'vehicleFuelType': vehicleFuelType,
+        'branchName': branchName,
+        'businessTradeName': businessTradeName,
+        'businessGSTINNumber': businessGSTINNumber,
+        'subTotal': subTotal,
+        'discount': discount,
+        'otherDiscount': otherDiscount,
+        'totalGSTAmount': totalGSTAmount,
+        'totalAmount': totalAmount,
+        'totalPaidAmount': totalPaidAmount,
+        'totalDueAmount': totalDueAmount,
+        'returnChangeAmount': returnChangeAmount,
+        'woItemsJSON': woItemsJSON,
+        'woItems': woItems,
+        'woPaymentsJSON': woPaymentsJSON,
+        'woPayments': woPayments,
+      };
 
   @override
   String toString() => jsonEncode(toMap());
@@ -183,7 +182,7 @@ class WorkOrder {
         woPayments: woPayments ?? this.woPayments,
       );
 
-/// Raw Json from which class WorkOrder is generated
+  /// Raw Json from which class WorkOrder is generated
 /*
 {
     "workOrderId": "ba483cb0-46fb-4245-8f6e-a3d6cbd3c400",
