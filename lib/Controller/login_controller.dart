@@ -13,7 +13,7 @@ class LoginController extends GetxController {
   final FocusNode otpFocusNode = FocusNode();
 
   final isLoading = false.obs;
-  final isButtonEnabled = false.obs;
+  RxBool isButtonEnabled = false.obs;
   final isPhoneFocused = false.obs;
   final isOtpFocused = false.obs;
   final verificationCode = ''.obs;

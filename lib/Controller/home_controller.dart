@@ -15,7 +15,7 @@ class HomeController extends GetxController {
   var isLastPage = false.obs;
   var currentPage = 1.obs;
   final int pageSize = 10;
-  final String baseUrl = 'https://apnawash.azurewebsites.net/api/GetAllWorkOrderForUser';
+  final String endPoint = 'https://apnawash.azurewebsites.net/api/GetAllWorkOrderForUser';
   var hasShownGreeting = false.obs; // New flag to track greeting display
 
   ScrollController scrollController = ScrollController();
@@ -60,7 +60,7 @@ class HomeController extends GetxController {
     try {
       // Calculate the current page number to fetch
       final int page = isLoadMore ? currentPage.value + 1 : 1;
-      final String url = '$baseUrl?PageNumber=$page&PageSize=$pageSize&PhoneNumber=$phoneNumber';
+      final String url = '$endPoint?PageNumber=$page&PageSize=$pageSize&PhoneNumber=$phoneNumber';
 
       final response = await http.get(Uri.parse(url));
 
@@ -80,7 +80,7 @@ class HomeController extends GetxController {
         }
 
         if (data.isNotEmpty) {
-          final List<WorkOrder> newWorkOrders = data.map((e) => WorkOrder.fromJson(e)).toList();
+          final List<WorkOrder> newWorkOrders = data.map((e) => WorkOrder.fromMap(e)).toList();
 
           if (isLoadMore) {
             workOrders.addAll(newWorkOrders);

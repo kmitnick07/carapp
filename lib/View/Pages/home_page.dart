@@ -135,32 +135,36 @@ class HomePage extends GetView<HomeController> {
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 12.0),
-                                  child: Text('Subtotal: ₹${workOrder.subTotal?.toString() ?? 'N/A'}'),
+                                  child: Text('Subtotal: ₹${workOrder.subTotal.toString() ?? 'N/A'}'),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 12.0),
-                                  child: Text('Total Discount: ₹${workOrder.totalDiscount?.toString() ?? 'N/A'}'),
+                                  child: Text('Discount: ₹${workOrder.discount.toString() ?? 'N/A'}'),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 12.0),
-                                  child: Text('Total GST Amount: ₹${workOrder.totalGSTAmount?.toString() ?? 'N/A'}'),
+                                  child: Text('Other Discount: ₹${workOrder.otherDiscount.toString() ?? 'N/A'}'),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 12.0),
-                                  child: Text('Total Amount: ₹${workOrder.totalAmount?.toString() ?? 'N/A'}'),
+                                  child: Text('Total GST Amount: ₹${workOrder.totalGSTAmount.toString() ?? 'N/A'}'),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 12.0),
-                                  child: Text('Total Paid Amount: ₹${workOrder.totalPaidAmount?.toString() ?? 'N/A'}'),
+                                  child: Text('Total Amount: ₹${workOrder.totalAmount.toString() ?? 'N/A'}'),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 12.0),
-                                  child: Text('Total Due Amount: ₹${workOrder.totalDueAmount?.toString() ?? 'N/A'}'),
+                                  child: Text('Total Paid Amount: ₹${workOrder.totalPaidAmount.toString() ?? 'N/A'}'),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 12.0),
+                                  child: Text('Total Due Amount: ₹${workOrder.totalDueAmount.toString() ?? 'N/A'}'),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 12.0),
                                   child: Text(
-                                      'Return Change Amount: ₹${workOrder.returnChangeAmount?.toString() ?? 'N/A'}'),
+                                      'Return Change Amount: ₹${workOrder.returnChangeAmount.toString() ?? 'N/A'}'),
                                 ),
                                 const Divider(),
                                 const Padding(
