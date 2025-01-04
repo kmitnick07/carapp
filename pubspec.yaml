@@ -38,11 +38,13 @@ dependencies:
   get: 4.6.6
   firebase_core: ^2.28.0
   firebase_auth: ^4.19.0
-  pinput:
   shared_preferences: ^2.3.3
   dev_print:
   http: ^1.2.2
   encrypt: ^5.0.3
+#  firebase_app_check: ^0.2.2+7
+  flutter_native_splash: ^2.4.4
+  pinput: ^5.0.0
 
 dev_dependencies:
   flutter_test:

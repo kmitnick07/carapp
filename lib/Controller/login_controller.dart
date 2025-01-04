@@ -13,7 +13,7 @@ class LoginController extends GetxController {
   final FocusNode otpFocusNode = FocusNode();
 
   final isLoading = false.obs;
-  RxBool isButtonEnabled = false.obs;
+  final isButtonEnabled = false.obs;
   final isPhoneFocused = false.obs;
   final isOtpFocused = false.obs;
   final verificationCode = ''.obs;
@@ -53,7 +53,7 @@ class LoginController extends GetxController {
     isLoading.value = true;
     try {
       await FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: kDebugMode ? '+919898232801' : '+91${phoneController.text}',
+        phoneNumber:'+91${phoneController.text}',
         verificationCompleted: (PhoneAuthCredential credential) {},
         verificationFailed: (FirebaseAuthException e) {
           Get.snackbar('Error', e.message ?? "Verification failed");

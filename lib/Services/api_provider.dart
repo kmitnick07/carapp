@@ -32,16 +32,16 @@ class ApiProvider {
       if (!Config.isEncrypted) {
         reqHeader = headers ?? {};
       } else {
-        String encryptedHeader = EncryptRepo().encryptData(jsonEncode(headers));
-        reqHeader['reqheader'] = encryptedHeader;
+        // String encryptedHeader = EncryptRepo().encryptData(jsonEncode(headers));
+        // reqHeader['reqheader'] = encryptedHeader;
       }
       reqHeader['content-type'] = 'application/json';
 
       if (!Config.isEncrypted) {
         reqBody = requestBody ?? {};
       } else {
-        String encryptedBody = EncryptRepo().encryptData(jsonEncode(requestBody));
-        reqBody['reqbody'] = encryptedBody;
+        // String encryptedBody = EncryptRepo().encryptData(jsonEncode(requestBody));
+        // reqBody['reqbody'] = encryptedBody;
       }
 
       if (method == HttpMethod.get) {
@@ -114,7 +114,7 @@ class ApiProvider {
     try {
       String bodyString = body;
       if (Config.isEncrypted) {
-        bodyString = EncryptRepo().decryptedData(body);
+        // bodyString = EncryptRepo().decryptedData(body);
       }
       if (!Config.isEncrypted) {
         responseJson = jsonDecode(bodyString);

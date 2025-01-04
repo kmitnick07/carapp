@@ -1,5 +1,4 @@
-import 'package:apna_wash/Services/api_const.dart';
-import 'package:apna_wash/Services/api_provider.dart';
+import 'dart:convert';
 import 'package:apna_wash/Routes/route_name.dart';
 import 'package:apna_wash/Utils/Custom/custom_dailog.dart';
 import 'package:dev_print/dev_print.dart';
@@ -7,19 +6,21 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../Model/WorkOrder/work_order_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../Model/WorkOrder/work_order_model.dart';
+import '../Services/api_const.dart';
+import '../Services/api_provider.dart';
 
 class HomeController extends GetxController {
-  RxList<WorkOrder> workOrders = <WorkOrder>[].obs;
-  RxBool isLoading = false.obs;
-  RxBool isLastPage = false.obs;
-  int currentPage = 1;
-  int pageSize = 10;
+  var workOrders = <WorkOrder>[].obs;
+  var isLoading = false.obs;
+  var isLastPage = false.obs;
+  var currentPage = 1.obs;
   String phoneNumber = '';
-  RxBool hasShownGreeting = false.obs; // New flag to track greeting display
+  final int pageSize = 10;
+  final String baseUrl = 'https://apnawash.azurewebsites.net/api/GetAllWorkOrderForUser';
+  var hasShownGreeting = false.obs; // New flag to track greeting display  User? currentUser = FirebaseAuth.instance.currentUser;
   User? currentUser = FirebaseAuth.instance.currentUser;
-
   ScrollController scrollController = ScrollController();
 
   @override
@@ -66,13 +67,11 @@ class HomeController extends GetxController {
       isLoading.value = false;
     }
   }
-
   void checkAndShowGreeting() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool hasShownGreeting = prefs.getBool('hasShownGreeting') ?? false;
-
+    final prefs = await SharedPreferences.getInstance();
+    final hasShownGreeting = prefs.getBool('hasShownGreeting') ?? false;
     if (!hasShownGreeting) {
-      prefs.setBool('hasShownGreeting', true); // Mark the greeting as shown
+      await prefs.setBool('hasShownGreeting', true);
       showGreeting();
     }
   }
