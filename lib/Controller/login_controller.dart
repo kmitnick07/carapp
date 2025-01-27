@@ -1,9 +1,7 @@
-import 'package:apna_wash/Routes/route_name.dart';
 import 'package:dev_print/dev_print.dart';
-import 'package:flutter/foundation.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginController extends GetxController {
@@ -60,7 +58,7 @@ class LoginController extends GetxController {
         },
         codeSent: (String verificationId, int? resendToken) {
           verificationCode.value = verificationId;
-          navigateTo(RouteNames.kOtpScreen);
+          // Navigation.pushNamed(Routes.kOtpScreen);
         },
         codeAutoRetrievalTimeout: (String verificationId) {
           verificationCode.value = verificationId;
@@ -83,7 +81,7 @@ class LoginController extends GetxController {
       await FirebaseAuth.instance.signInWithCredential(credential).then((value) {
         if (value.user != null) {
           saveUserData(value.user!.uid);
-          navigateTo(RouteNames.kHomeScreen);
+          // Navigation.pushNamed(Routes.kHomeScreen);
         }
       });
       isLoading.value = false;
@@ -120,6 +118,6 @@ class LoginController extends GetxController {
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear();
     isLoggedIn.value = false;
-    navigateTo(RouteNames.kLoginScreen);
+    // Nav.pushNamed(Routes.kLoginScreen);
   }
 }

@@ -1,7 +1,5 @@
+import 'package:apna_wash/Utils/Const/assets.dart';
 import 'package:flutter/material.dart';
-
-import '../../Utils/Const/assets_string.dart';
-
 
 class ApnaWashLogo extends StatelessWidget {
   const ApnaWashLogo({
@@ -20,7 +18,7 @@ class ApnaWashLogo extends StatelessWidget {
     return SizedBox(
       // height: size,
       child: Image.asset(
-        AssetsString.kLongLogo,
+        ImagesAsset.kLongLogo,
         height: size * 2.5 / 7,
       ),
     );

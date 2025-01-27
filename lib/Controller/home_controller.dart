@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'package:apna_wash/Routes/route_name.dart';
 import 'package:apna_wash/Utils/Custom/custom_dailog.dart';
 import 'package:dev_print/dev_print.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../Model/WorkOrder/work_order_model.dart';
 import '../Services/api_const.dart';
 import '../Services/api_provider.dart';
@@ -18,8 +17,10 @@ class HomeController extends GetxController {
   var currentPage = 1.obs;
   String phoneNumber = '';
   final int pageSize = 10;
-  final String baseUrl = 'https://apnawash.azurewebsites.net/api/GetAllWorkOrderForUser';
-  var hasShownGreeting = false.obs; // New flag to track greeting display  User? currentUser = FirebaseAuth.instance.currentUser;
+  final String baseUrl =
+      'https://apnawash.azurewebsites.net/api/GetAllWorkOrderForUser';
+  var hasShownGreeting = false
+      .obs; // New flag to track greeting display  User? currentUser = FirebaseAuth.instance.currentUser;
   User? currentUser = FirebaseAuth.instance.currentUser;
   ScrollController scrollController = ScrollController();
 
@@ -39,27 +40,36 @@ class HomeController extends GetxController {
   }
 
   void _scrollListener() {
-    if (!isLoading.value && scrollController.position.pixels >= scrollController.position.maxScrollExtent - 100) {
+    if (!isLoading.value &&
+        scrollController.position.pixels >=
+            scrollController.position.maxScrollExtent - 100) {
       fetchWorkOrders(isLoadMore: true);
     }
   }
 
   void fetchWorkOrders({bool isLoadMore = false}) async {
-    if (isLoading.value || isLastPage.value) return; // Prevent duplicate requests if already loading
+    if (isLoading.value || isLastPage.value) {
+      return; // Prevent duplicate requests if already loading
+    }
     String apiEndpoint = 'GetAllWorkOrderForUser';
 
-    String url = '${ApiConst.baseUrl}$apiEndpoint?PageNumber=$currentPage&PageSize=$pageSize&PhoneNumber=$phoneNumber';
+    String url =
+        '${ApiConst.baseUrl}$apiEndpoint?PageNumber=$currentPage&PageSize=$pageSize&PhoneNumber=$phoneNumber';
 
     isLoading.value = true;
     try {
-      final response = await ApiProvider().httpMethod(method: HttpMethod.get, url: url);
+      final response =
+          await ApiProvider().httpMethod(method: HttpMethod.get, url: url);
 
       if (response['success']) {
         final workOrdersData = response['result']['workOrders'];
-        final workOrdersMap = (workOrdersData as List<dynamic>).map((e) => WorkOrder.fromMap(e)).toList();
+        final workOrdersMap = (workOrdersData as List<dynamic>)
+            .map((e) => WorkOrder.fromMap(e))
+            .toList();
         workOrders.addAll(workOrdersMap);
         currentPage++;
-        isLastPage.value = (response['result']['isLastPage'] ?? 'Yes') == 'Yes' ? true : false;
+        isLastPage.value =
+            (response['result']['isLastPage'] ?? 'Yes') == 'Yes' ? true : false;
       }
     } catch (e) {
       devPrint(e, tag: "Error");
@@ -67,6 +77,7 @@ class HomeController extends GetxController {
       isLoading.value = false;
     }
   }
+
   void checkAndShowGreeting() async {
     final prefs = await SharedPreferences.getInstance();
     final hasShownGreeting = prefs.getBool('hasShownGreeting') ?? false;
@@ -107,7 +118,7 @@ class HomeController extends GetxController {
   void logout() async {
     try {
       await FirebaseAuth.instance.signOut();
-      navigateTo(RouteNames.kLoginScreen);
+      // Navigation.pushNamed(Routes.kLoginScreen);
     } catch (e) {
       Get.snackbar('Error', 'Failed to logout: $e');
     }

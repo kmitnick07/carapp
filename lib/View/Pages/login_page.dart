@@ -1,4 +1,6 @@
 import 'package:apna_wash/View/custom_scaffold.dart';
+import 'package:apna_wash/widget/custom_button.dart';
+import 'package:dev_print/dev_print.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../Controller/login_controller.dart';
@@ -49,33 +51,48 @@ class LoginPage extends GetView<LoginController> {
                   style: TextStyle(fontSize: 18, color: AppColor.primaryText),
                   decoration: InputDecoration(
                       prefixText: '+91 ',
-                      prefixStyle: TextStyle(fontSize: 18, color: AppColor.secondarySoft),
+                      prefixStyle: TextStyle(
+                          fontSize: 18, color: AppColor.secondarySoft),
                       hintText: 'Phone Number',
-                      hintStyle: TextStyle(fontSize: 16, color: AppColor.secondarySoft),
+                      hintStyle: TextStyle(
+                          fontSize: 16, color: AppColor.secondarySoft),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide.none,
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: AppColor.primary, width: 2.0),
+                        borderSide:
+                            BorderSide(color: AppColor.primary, width: 2.0),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: AppColor.secondarySoft, width: 2.0),
+                        borderSide: BorderSide(
+                            color: AppColor.secondarySoft, width: 2.0),
                       )),
                 ),
               ),
               const SizedBox(height: 24),
+              CustomButton(
+                  text: "hello",
+                  height: 40,
+                  width: double.maxFinite,
+                  isButtonFilled: true,
+                  onTap: () {
+                    devPrint("hello");
+                  }),
               Obx(
                 () => SizedBox(
                   height: 44,
                   child: ElevatedButton(
-                    onPressed:
-                        controller.isButtonEnabled.value && !controller.isLoading.value ? controller.sendOTP : null,
+                    onPressed: controller.isButtonEnabled.value &&
+                            !controller.isLoading.value
+                        ? controller.sendOTP
+                        : null,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          controller.isButtonEnabled.value ? AppColor.primary : AppColor.secondaryExtraSoft,
+                      backgroundColor: controller.isButtonEnabled.value
+                          ? AppColor.primary
+                          : AppColor.secondaryExtraSoft,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
@@ -88,8 +105,9 @@ class LoginPage extends GetView<LoginController> {
                             'Send OTP',
                             style: TextStyle(
                               fontSize: 16,
-                              color:
-                                  controller.isButtonEnabled.value ? AppColor.kWhite : AppColor.kWhite.withOpacity(0.5),
+                              color: controller.isButtonEnabled.value
+                                  ? AppColor.kWhite
+                                  : AppColor.kWhite.withOpacity(0.5),
                             ),
                           ),
                   ),
